@@ -101,8 +101,6 @@ class Robot(object):
 # ------------------------------------------------------------------------
 #
 # run - does a single control run
-
-# previous P controller
 def run(robot, tau, n=100, speed=1.0):
     x_trajectory = []
     y_trajectory = []
