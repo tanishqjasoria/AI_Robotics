@@ -101,7 +101,8 @@ class Robot(object):
 # ------------------------------------------------------------------------
 #
 # run - does a single control run
-def run(robot, tau, n=100, speed=1.0):
+#prev P controller
+def run_p(robot, tau, n=100, speed=1.0):
     x_trajectory = []
     y_trajectory = []
     for i in range(n):
@@ -112,12 +113,25 @@ def run(robot, tau, n=100, speed=1.0):
         y_trajectory.append(robot.y)
     return x_trajectory, y_trajectory
 
+def run(robot, tau_p, tau_d, n=100, speed=1.0):
+    x_trajectory = []
+    y_trajectory = []
+    # TODO: your code here
+    cte=robot.y
+    for i in range(n):
+        delCTE = cte - robot.y
+        cte = robot.y
+        steer = -tau_p * cte +tau_d*delCTE
+        robot.move(steer, speed)
+        x_trajectory.append(robot.x)
+        y_trajectory.append(robot.y)
+    return x_trajectory, y_trajectory
 robot = Robot()
 robot.set(0, 1, 0)
 
 
 
-x_trajectory, y_trajectory = run(robot, 0.2)
+x_trajectory, y_trajectory = run(robot, 0.2,0.3)
 n = len(x_trajectory)
 
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 8))
