@@ -113,7 +113,7 @@ def run_p(robot, tau, n=100, speed=1.0):
         y_trajectory.append(robot.y)
     return x_trajectory, y_trajectory
 
-def run(robot, tau_p, tau_d, n=100, speed=1.0):
+def run_pd(robot, tau_p, tau_d, n=100, speed=1.0):
     x_trajectory = []
     y_trajectory = []
     # TODO: your code here
@@ -126,12 +126,27 @@ def run(robot, tau_p, tau_d, n=100, speed=1.0):
         x_trajectory.append(robot.x)
         y_trajectory.append(robot.y)
     return x_trajectory, y_trajectory
+
+def run(robot, tau_p, tau_d, tau_i, n=100, speed=1.0):
+    x_trajectory = []
+    y_trajectory = []
+    cte=robot.y
+    intCTE=0
+    for i in range(n):
+        delCTE = cte - robot.y
+        cte = robot.y
+        intCTE = intCTE + cte
+        steer = -tau_p * cte +tau_d*delCTE - tau_i*intCTE
+        robot.move(steer, speed)
+        x_trajectory.append(robot.x)
+        y_trajectory.append(robot.y)
+    return x_trajectory, y_trajectory
 robot = Robot()
 robot.set(0, 1, 0)
 
 
 
-x_trajectory, y_trajectory = run(robot, 0.2,0.3)
+x_trajectory, y_trajectory = run(robot, 0.2,0.3,0.004)
 n = len(x_trajectory)
 
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 8))
